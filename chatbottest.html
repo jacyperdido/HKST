@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>im going craazyyyyyyyyyyyyyyyyyyyyyyyy </title>
+  <!-- Add your CSS stylesheets, meta tags, and other head elements here -->
+</head>
+<body>
+  <!-- Your website content -->
+
+  <!-- Chatbot Container -->
+  <div id="chatbot-container"></div>
+
+  <!-- Add your JavaScript code and Chatfuel API integration -->
+  <script>
+    // Chatfuel API Token
+    const API_TOKEN = 'vNHPmYdMp1hYqAOeuWIxpi6gx0nnOgujPBOSRBZRD5gDzxvPbJ1HeRHdxFy9UpCG';
+
+    // Function to send user message to Chatfuel
+    function sendUserMessage(message) {
+      fetch('https://api.chatfuel.com/bots/64780c3e52e112324ccafbab/users/64786808a6e077ad381bb756/send?chatfuel_token=' + API_TOKEN, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        })
+      .then(response => response.json())
+      .then(data => {
+        // Process and display bot response
+        const botResponse = data.messages[0].message.text;
+        displayBotResponse(botResponse);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+
+    // Function to display bot response
+    function displayBotResponse(response) {
+      const chatbotContainer = document.getElementById('chatbot-container');
+      const botResponseElement = document.createElement('p');
+      botResponseElement.textContent = 'Bot: ' + response;
+      chatbotContainer.appendChild(botResponseElement);
+    }
+
+    // Example usage: Send a user message to Chatfuel
+    sendUserMessage('Hello, Chatfuel!');
+
+    // Example usage: Send a user message when the Enter key is pressed
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        const userMessage = 'User: ' + event.target.value;
+        const chatbotContainer = document.getElementById('chatbot-container');
+        const userMessageElement = document.createElement('p');
+        userMessageElement.textContent = userMessage;
+        chatbotContainer.appendChild(userMessageElement);
+        
+        sendUserMessage(event.target.value);
+        event.target.value = '';
+      }
+    });
+  </script>
+</body>
+</html>

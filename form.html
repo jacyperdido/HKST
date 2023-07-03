@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Data Display</title>
+    <script>
+        function displayFormData(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get form data
+            var formData = new FormData(document.getElementById("myForm"));
+
+            // Get all form entries
+            var entries = Array.from(formData.entries());
+
+            // Retrieve previous form data from local storage
+            var previousData = localStorage.getItem("formData");
+
+            var allEntries = [];
+            if (previousData) {
+                allEntries = JSON.parse(previousData);
+            }
+
+            // Add current form data to previous form data
+            allEntries.push(entries);
+
+            // Store updated form data in local storage
+            localStorage.setItem("formData", JSON.stringify(allEntries));
+
+            // Display all form data
+            var displayDiv = document.getElementById("displayDiv");
+            displayDiv.innerHTML = "";
+
+            for (var submission of allEntries) {
+                for (var entry of submission) {
+                    var key = entry[0];
+                    var value = entry[1];
+                    displayDiv.innerHTML += "<p><strong>" + key + ":</strong> " + value + "</p>";
+                }
+                displayDiv.innerHTML += "<hr>";
+            }
+        }
+
+        // Display previous form submissions on page load
+        window.onload = function() {
+            var storedData = localStorage.getItem("formData");
+            if (storedData) {
+                var previousSubmissions = JSON.parse(storedData);
+
+                var displayDiv = document.getElementById("displayDiv");
+                displayDiv.innerHTML = "";
+
+                for (var submission of previousSubmissions) {
+                    for (var entry of submission) {
+                        var key = entry[0];
+                        var value = entry[1];
+                        displayDiv.innerHTML += "<p><strong>" + key + ":</strong> " + value + "</p>";
+                    }
+                    displayDiv.innerHTML += "<hr>";
+                }
+            }
+        };
+    </script>
+</head>
+<body>
+    <h1>Form Data Display</h1>
+    <form id="myForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" rows="4" required></textarea><br><br>
+
+        <input type="submit" value="Submit" onclick="displayFormData(event)">
+    </form>
+
+    <div id="displayDiv"></div>
+</body>
+</html>
